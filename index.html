@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Zenith — Personal Growth & Daily Mastery</title>
+
+  <!-- PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Zenith" />
+  <meta name="theme-color" content="#2D6A4F" />
+  <meta name="description" content="Plan your day, execute, stay consistent, and reach your Zenith. Premium iPhone PWA for habits, routines, and task mastery." />
+  <link rel="manifest" href="/manifest.webmanifest" />
+</head>
+<body class="h-full bg-[#FAF9F6] text-slate-800 antialiased dark:bg-[#0D1813] dark:text-slate-100 flex flex-col justify-between overflow-hidden">
+
+  <!-- ================= APP CONTAINER (iPhone Frame Shell) ================= -->
+  <div id="app" class="relative w-full h-full max-w-md mx-auto flex flex-col overflow-hidden bg-[#FAF9F6] dark:bg-[#0D1813] shadow-2xl transition-colors duration-300">
+
+    <!-- TOP STATUS BAR & HEADER -->
+    <header class="pt-[max(env(safe-area-inset-top),16px)] px-5 pb-3 bg-[#FAF9F6]/90 dark:bg-[#0D1813]/90 backdrop-blur-md sticky top-0 z-20 flex items-center justify-between border-b border-black/5 dark:border-white/5">
+      <div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+          <span id="header-greeting" class="text-xs font-semibold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">GOOD MORNING</span>
+        </div>
+        <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+          Zenith
+          <span id="header-dual-date" class="text-xs font-normal text-slate-500 dark:text-zenith-darkMuted bg-slate-200/60 dark:bg-emerald-950/50 px-2 py-0.5 rounded-full">
+            Loading Date...
+          </span>
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn-notifications-toggle" onclick="app.requestNotificationPermission()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-[#15241D] flex items-center justify-center text-slate-600 dark:text-emerald-300 border border-slate-200 dark:border-emerald-900/40 active:scale-95 transition-all">
+          <i data-lucide="bell" class="w-4 h-4"></i>
+        </button>
+        <button id="btn-open-settings" onclick="app.switchTab('settings')" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-[#15241D] flex items-center justify-center text-slate-600 dark:text-emerald-300 border border-slate-200 dark:border-emerald-900/40 active:scale-95 transition-all">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- MOTIVATIONAL BANNER -->
+    <div id="motivational-banner" class="px-5 py-2 text-xs font-medium bg-emerald-50 dark:bg-emerald-950/30 text-emerald-800 dark:text-emerald-300 border-b border-emerald-100 dark:border-emerald-900/40 flex items-center justify-between">
+      <span id="motivational-text" class="truncate pr-2">Plan your day → Reach your Zenith.</span>
+      <span class="text-base" id="streak-flame">🔥 14</span>
+    </div>
+
+    <!-- MAIN SCROLLABLE CONTENT VIEWPORT -->
+    <main id="main-viewport" class="flex-1 overflow-y-auto px-4 py-4 space-y-5 pb-28">
+
+      <!-- ================= 1. HOME TAB ================= -->
+      <section id="view-home" class="space-y-5">
+        <!-- SCORE & CIRCULAR PROGRESS HERO CARD -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2D6A4F] to-[#1B4332] text-white p-5 shadow-xl shadow-emerald-950/20">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-xs uppercase tracking-wider text-emerald-200 font-semibold">Today's Performance</div>
+              <div class="text-3xl font-extrabold tracking-tight mt-1 flex items-baseline gap-1">
+                <span id="home-score-val">86</span>
+                <span class="text-sm font-normal text-emerald-200/80">/100</span>
+              </div>
+              <p id="home-score-feedback" class="text-xs text-emerald-100 mt-1 max-w-[190px] leading-relaxed">
+                Outstanding momentum! Keep crushing your planned routines.
+              </p>
+            </div>
+
+            <!-- Animated Circular Ring Gauge -->
+            <div class="relative flex items-center justify-center w-24 h-24">
+              <svg class="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.15)" stroke-width="8" fill="transparent"></circle>
+                <circle id="home-progress-circle" cx="50" cy="50" r="40" stroke="#52B788" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="70" stroke-linecap="round" fill="transparent" class="transition-all duration-1000 ease-out"></circle>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span id="home-progress-percent" class="text-lg font-bold">72%</span>
+                <span class="text-[10px] text-emerald-200 uppercase tracking-tighter">Done</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Bar -->
+          <div class="mt-4 pt-4 border-t border-white/10 grid grid-cols-4 text-center divide-x divide-white/10">
+            <div>
+              <div id="metric-tasks" class="text-sm font-bold">3/5</div>
+              <div class="text-[10px] text-emerald-200">Tasks</div>
+            </div>
+            <div>
+              <div id="metric-habits" class="text-sm font-bold">4/4</div>
+              <div class="text-[10px] text-emerald-200">Habits</div>
+            </div>
+            <div>
+              <div id="metric-routines" class="text-sm font-bold">1/2</div>
+              <div class="text-[10px] text-emerald-200">Routines</div>
+            </div>
+            <div>
+              <div id="metric-streak" class="text-sm font-bold text-amber-300">14d</div>
+              <div class="text-[10px] text-emerald-200">Streak</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTIONS STRIP -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 scrollbar-none">
+          <button onclick="app.openCreateModal('task')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#15241D] border border-slate-200/80 dark:border-[#23382D] text-xs font-semibold text-slate-800 dark:text-white shadow-sm shrink-0 active:scale-95 transition-transform">
+            <span class="w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 flex items-center justify-center text-xs">＋</span>
+            Task
+          </button>
+          <button onclick="app.openCreateModal('habit')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#15241D] border border-slate-200/80 dark:border-[#23382D] text-xs font-semibold text-slate-800 dark:text-white shadow-sm shrink-0 active:scale-95 transition-transform">
+            <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 flex items-center justify-center text-xs">💧</span>
+            Habit
+          </button>
+          <button onclick="app.openCreateModal('routine')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white dark:bg-[#15241D] border border-slate-200/80 dark:border-[#23382D] text-xs font-semibold text-slate-800 dark:text-white shadow-sm shrink-0 active:scale-95 transition-transform">
+            <span class="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400 flex items-center justify-center text-xs">☀️</span>
+            Routine
+          </button>
+          <button onclick="app.startRoutine('routine_1')" class="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-emerald-600 text-white text-xs font-semibold shadow-md shadow-emerald-700/20 shrink-0 active:scale-95 transition-transform">
+            <i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>
+            Start Morning
+          </button>
+        </div>
+
+        <!-- WATER INTAKE TRACKER WIDGET -->
+        <div class="rounded-3xl bg-white dark:bg-[#15241D] p-4 border border-slate-200/70 dark:border-[#23382D] shadow-sm flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/50 flex items-center justify-center text-2xl border border-blue-100 dark:border-blue-900/40">
+              💧
+            </div>
+            <div>
+              <div class="text-sm font-bold text-slate-900 dark:text-white">Hydration Tracker</div>
+              <div class="text-xs text-slate-500 dark:text-zenith-darkMuted" id="water-count-label">5 of 8 glasses consumed</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="app.updateWater(-1)" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#23382D] flex items-center justify-center font-bold text-slate-700 dark:text-white active:scale-90 transition-transform">−</button>
+            <span id="water-pill" class="text-sm font-bold px-2 text-blue-600 dark:text-blue-400">5/8</span>
+            <button onclick="app.updateWater(1)" class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shadow-md shadow-blue-500/20 active:scale-90 transition-transform">+</button>
+          </div>
+        </div>
+
+        <!-- TODAY'S CHRONOLOGICAL AGENDA -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1">
+            <h2 class="text-sm font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+              <span>Today's Agenda</span>
+              <span class="text-[10px] bg-slate-200 dark:bg-[#23382D] px-2 py-0.5 rounded-full font-medium text-slate-600 dark:text-zenith-darkMuted" id="agenda-count">5 items</span>
+            </h2>
+            <button onclick="app.switchTab('planner')" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">View Planner →</button>
+          </div>
+
+          <div id="home-agenda-list" class="space-y-2.5">
+            <!-- Dynamic agenda items rendered here -->
+          </div>
+        </div>
+
+        <!-- ACTIVE ROUTINES PREVIEW -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1">
+            <h2 class="text-sm font-bold tracking-tight text-slate-900 dark:text-white">Active Routines</h2>
+            <button onclick="app.openRoutineBuilder()" class="text-xs font-semibold text-emerald-600 dark:text-emerald-400">Builder</button>
+          </div>
+          <div id="home-routines-grid" class="grid grid-cols-2 gap-3">
+            <!-- Dynamic routines rendered here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. PLANNER TAB ================= -->
+      <section id="view-planner" class="hidden space-y-4">
+        <!-- Dual Calendar Navigation Bar -->
+        <div class="rounded-3xl bg-white dark:bg-[#15241D] p-4 border border-slate-200/70 dark:border-[#23382D] shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <button onclick="app.changePlannerDate(-1)" class="p-2 rounded-xl bg-slate-100 dark:bg-[#23382D] text-slate-700 dark:text-white active:scale-90 transition-transform">
+              <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+            <div class="text-center">
+              <div id="planner-gregorian-label" class="text-sm font-bold text-slate-900 dark:text-white">September 11, 2026</div>
+              <div id="planner-jalali-label" class="text-xs font-medium text-emerald-600 dark:text-emerald-400">20 Shahrivar 1405</div>
+            </div>
+            <button onclick="app.changePlannerDate(1)" class="p-2 rounded-xl bg-slate-100 dark:bg-[#23382D] text-slate-700 dark:text-white active:scale-90 transition-transform">
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- View Scope Pills -->
+          <div class="grid grid-cols-3 gap-1 p-1 bg-slate-100 dark:bg-[#0D1813] rounded-2xl">
+            <button class="py-1.5 text-xs font-bold rounded-xl bg-white dark:bg-[#15241D] text-emerald-700 dark:text-emerald-400 shadow-sm">Day</button>
+            <button onclick="app.toast('Week view synced with Jalali calendar')" class="py-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 dark:text-zenith-darkMuted">Week</button>
+            <button onclick="app.toast('Month matrix synced with Jalali calendar')" class="py-1.5 text-xs font-medium text-slate-500 hover:text-slate-900 dark:text-zenith-darkMuted">Month</button>
+          </div>
+        </div>
+
+        <!-- Vertical Timeline Schedule -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between px-1">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zenith-darkMuted">Scheduled Timeline</h3>
+            <button onclick="app.openCreateModal('task')" class="text-xs font-bold text-emerald-600 dark:text-emerald-400">＋ Add Task</button>
+          </div>
+
+          <div id="planner-timeline" class="space-y-2 relative before:absolute before:left-7 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-200 dark:before:bg-[#23382D]">
+            <!-- Timeline items -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. HABITS TAB ================= -->
+      <section id="view-habits" class="hidden space-y-4">
+        <div class="flex items-center justify-between px-1">
+          <div>
+            <h2 class="text-base font-bold text-slate-900 dark:text-white">Habit Tracker & Streaks</h2>
+            <p class="text-xs text-slate-500 dark:text-zenith-darkMuted">Small repeated habits lead to your Zenith</p>
+          </div>
+          <button onclick="app.openCreateModal('habit')" class="px-3 py-1.5 rounded-2xl bg-emerald-600 text-white text-xs font-bold shadow-md shadow-emerald-700/20 active:scale-95">
+            ＋ New Habit
+          </button>
+        </div>
+
+        <div id="habits-container" class="space-y-3">
+          <!-- Dynamic habits loaded here -->
+        </div>
+      </section>
+
+      <!-- ================= 4. PROGRESS TAB ================= -->
+      <section id="view-progress" class="hidden space-y-5">
+        <div class="flex items-center justify-between px-1">
+          <h2 class="text-base font-bold text-slate-900 dark:text-white">Performance & Analytics</h2>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">Last 7 Days</span>
+        </div>
+
+        <!-- Weekly Performance Chart (Canvas-based) -->
+        <div class="rounded-3xl bg-white dark:bg-[#15241D] p-5 border border-slate-200/70 dark:border-[#23382D] shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zenith-darkMuted">Daily Completion Rate</span>
+            <span class="text-sm font-extrabold text-emerald-600 dark:text-emerald-400">89% Avg</span>
+          </div>
+
+          <!-- CSS Bar Chart for exact mobile fidelity -->
+          <div class="h-32 flex items-end justify-between gap-2 pt-4 px-1" id="weekly-chart-bars">
+            <!-- Dynamic 7-day bars -->
+          </div>
+        </div>
+
+        <!-- 30-Day Activity Heatmap Grid -->
+        <div class="rounded-3xl bg-white dark:bg-[#15241D] p-5 border border-slate-200/70 dark:border-[#23382D] shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zenith-darkMuted">30-Day Consistency Heatmap</span>
+            <span class="text-xs text-emerald-600 dark:text-emerald-400 font-medium">94% Active</span>
+          </div>
+
+          <div id="heatmap-grid" class="grid grid-cols-6 gap-2 pt-2">
+            <!-- 30 days intensity cells -->
+          </div>
+        </div>
+
+        <!-- Achievements Badges Showcase -->
+        <div class="space-y-2">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zenith-darkMuted px-1">Achievements & Milestones</h3>
+          <div id="achievements-list" class="grid grid-cols-2 gap-2.5">
+            <!-- Badges -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. SETTINGS TAB ================= -->
+      <section id="view-settings" class="hidden space-y-4">
+        <h2 class="text-base font-bold text-slate-900 dark:text-white px-1">Zenith Preferences</h2>
+
+        <!-- Appearance & Theme -->
+        <div class="rounded-3xl bg-white dark:bg-[#15241D] p-4 border border-slate-200/70 dark:border-[#23382D] shadow-sm space-y-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zenith-darkMuted">Appearance</div>
+          <div class="grid grid-cols-3 gap-2">
+            <button onclick="app.setTheme('light')" id="theme-btn-light" class="py-2 px-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all">
+              <span>☀️</span> Light
+            </button>
+            <button onclick="app.setTheme('dark')" id="theme-btn-dark" class="py-2 px-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all">
+              <span>🌙</span> Dark
+            </button>
+            <button onclick="app.setTheme('system')" id="theme-btn-system" class="py-2 px-3 rounded-2xl border text-xs font-bold flex flex-col items-center gap-1.5 transition-all">
+              <span>⚙️</span> System
+            </button>
+          </div>
+        </div>
+
+        <!-- Dual Calendar Mode -->
+        <div class="rounded-3xl bg-white dark:bg-[#15241D] p-4 border border-slate-200/70 dark:border-[#23382D] shadow-sm space-y-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zenith-darkMuted">Calendar Mode</div>
+          <div class="grid grid-cols-3 gap-2">
+            <button onclick="app.setCalendarMode('gregorian')" id="cal-btn-gregorian" class="py-2 text-xs font-bold rounded-2xl border transition-all">
+              Gregorian
+            </button>
+            <button onclick="app.setCalendarMode('persian')" id="cal-btn-persian" class="py-2 text-xs font-bold rounded-2xl border transition-all">
+              Persian (Jalali)
+            </button>
+            <button onclick="app.setCalendarMode('both')" id="cal-btn-both" class="py-2 text-xs font-bold rounded-2xl border transition-all">
+              Both Calendars
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-zenith-darkMuted leading-tight">
+            Accurate astronomical Jalali algorithm displayed in English Finglish transliteration (e.g. 20 Shahrivar 1405).
+          </p>
+        </div>
+
+        <!-- Sound & Effects Toggles -->
+        <div class="rounded-3xl bg-white dark:bg-[#15241D] p-4 border border-slate-200/70 dark:border-[#23382D] shadow-sm space-y-3 divide-y divide-slate-100 dark:divide-[#23382D]">
+          <div class="flex items-center justify-between pb-2">
+            <div>
+              <div class="text-xs font-bold text-slate-900 dark:text-white">Audio Synthesis</div>
+              <div class="text-[11px] text-slate-500 dark:text-zenith-darkMuted">Web Audio API tones on completion</div>
+            </div>
+            <input type="checkbox" id="toggle-sound" onchange="app.toggleSound(this.checked)" checked class="w-5 h-5 accent-emerald-600 rounded" />
+          </div>
+
+          <div class="flex items-center justify-between pt-2 pb-2">
+            <div>
+              <div class="text-xs font-bold text-slate-900 dark:text-white">Celebration Confetti</div>
+              <div class="text-[11px] text-slate-500 dark:text-zenith-darkMuted">Visual particle burst on success</div>
+            </div>
+            <input type="checkbox" id="toggle-celebration" onchange="app.toggleCelebrations(this.checked)" checked class="w-5 h-5 accent-emerald-600 rounded" />
+          </div>
+
+          <div class="flex items-center justify-between pt-2">
+            <div>
+              <div class="text-xs font-bold text-slate-900 dark:text-white">Gentle Consequence Alerts</div>
+              <div class="text-[11px] text-slate-500 dark:text-zenith-darkMuted">Non-punitive recovery cues on missed tasks</div>
+            </div>
+            <input type="checkbox" id="toggle-consequence" onchange="app.toggleConsequences(this.checked)" checked class="w-5 h-5 accent-emerald-600 rounded" />
+          </div>
+        </div>
+
+        <!-- Data Backup / Export / Reset -->
+        <div class="rounded-3xl bg-white dark:bg-[#15241D] p-4 border border-slate-200/70 dark:border-[#23382D] shadow-sm space-y-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zenith-darkMuted">Data Portability (Offline First)</div>
+          <div class="flex gap-2">
+            <button onclick="app.exportData()" class="flex-1 py-2.5 rounded-2xl bg-slate-100 dark:bg-[#23382D] text-xs font-bold text-slate-800 dark:text-white active:scale-95 transition-all">
+              Export Backup JSON
+            </button>
+            <button onclick="document.getElementById('import-file-input').click()" class="flex-1 py-2.5 rounded-2xl bg-slate-100 dark:bg-[#23382D] text-xs font-bold text-slate-800 dark:text-white active:scale-95 transition-all">
+              Import Backup
+            </button>
+            <input type="file" id="import-file-input" accept=".json" class="hidden" onchange="app.importData(event)" />
+          </div>
+          <button onclick="app.resetSampleData()" class="w-full py-2.5 rounded-2xl border border-rose-300 dark:border-rose-900/60 text-xs font-bold text-rose-600 dark:text-rose-400 active:scale-95 transition-all">
+            Reset to Sample Data
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================= FLOATING ACTION & BOTTOM NAV ================= -->
+    <!-- Native iOS Glass Tab Bar -->
+    <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-30 pointer-events-none">
+      <div class="relative px-4 pb-[max(env(safe-area-inset-bottom),14px)] pt-2">
+
+        <!-- Floating + Create Action Button -->
+        <div class="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-auto">
+          <button onclick="app.toggleCreateMenu()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-[#2D6A4F] to-[#52B788] text-white flex items-center justify-center shadow-lg shadow-emerald-900/30 active:scale-90 transition-transform focus:outline-none ring-4 ring-[#FAF9F6] dark:ring-[#0D1813]">
+            <i data-lucide="plus" class="w-7 h-7 stroke-[2.5]"></i>
+          </button>
+        </div>
+
+        <nav class="pointer-events-auto h-16 rounded-3xl bg-white/85 dark:bg-[#15241D]/85 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-2xl flex items-center justify-around px-2">
+          <button onclick="app.switchTab('home')" id="tab-home" class="flex flex-col items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold transition-all">
+            <i data-lucide="layout-grid" class="w-5 h-5"></i>
+            <span class="text-[10px]">Home</span>
+          </button>
+          <button onclick="app.switchTab('planner')" id="tab-planner" class="flex flex-col items-center gap-1 text-slate-400 dark:text-zenith-darkMuted hover:text-slate-600 dark:hover:text-white transition-all">
+            <i data-lucide="calendar" class="w-5 h-5"></i>
+            <span class="text-[10px]">Planner</span>
+          </button>
+
+          <!-- Spacer for floating center button -->
+          <div class="w-12"></div>
+
+          <button onclick="app.switchTab('habits')" id="tab-habits" class="flex flex-col items-center gap-1 text-slate-400 dark:text-zenith-darkMuted hover:text-slate-600 dark:hover:text-white transition-all">
+            <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+            <span class="text-[10px]">Habits</span>
+          </button>
+          <button onclick="app.switchTab('progress')" id="tab-progress" class="flex flex-col items-center gap-1 text-slate-400 dark:text-zenith-darkMuted hover:text-slate-600 dark:hover:text-white transition-all">
+            <i data-lucide="line-chart" class="w-5 h-5"></i>
+            <span class="text-[10px]">Progress</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ================= ROUTINE EXECUTION FULLSCREEN OVERLAY ================= -->
+    <div id="routine-modal" class="fixed inset-0 z-50 bg-[#FAF9F6] dark:bg-[#0D1813] flex flex-col justify-between p-6 hidden">
+      <div class="pt-[max(env(safe-area-inset-top),16px)] flex items-center justify-between">
+        <div>
+          <span class="text-xs uppercase font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">Routine Execution</span>
+          <h2 id="exec-routine-title" class="text-xl font-extrabold text-slate-900 dark:text-white">Morning Routine ☀️</h2>
+        </div>
+        <button onclick="app.closeRoutineExecution()" class="p-2 rounded-full bg-slate-200/60 dark:bg-[#15241D] text-slate-600 dark:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Step Counter & Progress -->
+      <div class="my-auto text-center space-y-6">
+        <div id="exec-step-emoji" class="text-7xl animate-bounce">💧</div>
+        <div>
+          <div id="exec-step-number" class="text-xs font-bold uppercase tracking-widest text-emerald-700 dark:text-emerald-400">Step 2 of 5</div>
+          <h3 id="exec-step-title" class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">Drink Large Glass of Water</h3>
+          <p id="exec-step-notes" class="text-sm text-slate-500 dark:text-zenith-darkMuted mt-2 max-w-xs mx-auto">Rehydrate your body and awaken metabolic function.</p>
+        </div>
+
+        <!-- Big Countdown Timer -->
+        <div class="inline-flex items-center gap-3 px-6 py-3 rounded-3xl bg-emerald-50 dark:bg-[#15241D] border border-emerald-200/50 dark:border-[#23382D]">
+          <i data-lucide="timer" class="w-6 h-6 text-emerald-600 dark:text-emerald-400"></i>
+          <span id="exec-timer-display" class="text-3xl font-mono font-bold text-emerald-800 dark:text-emerald-300">01:45</span>
+        </div>
+      </div>
+
+      <!-- Execution Navigation Buttons -->
+      <div class="pb-[max(env(safe-area-inset-bottom),16px)] space-y-3">
+        <button onclick="app.completeCurrentRoutineStep()" class="w-full py-4 rounded-3xl bg-emerald-600 text-white font-extrabold text-base shadow-lg shadow-emerald-700/30 active:scale-95 transition-transform flex items-center justify-center gap-2">
+          <i data-lucide="check" class="w-5 h-5 stroke-[3]"></i>
+          Complete Step
+        </button>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="app.prevRoutineStep()" class="py-3 rounded-2xl bg-slate-200 dark:bg-[#15241D] text-slate-800 dark:text-white font-bold text-xs">
+            Previous Step
+          </button>
+          <button onclick="app.skipRoutineStep()" class="py-3 rounded-2xl bg-slate-200 dark:bg-[#15241D] text-slate-800 dark:text-white font-bold text-xs">
+            Skip Step
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MODAL BOTTOM SHEET: CREATE ITEM ================= -->
+    <div id="modal-create-sheet" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm hidden flex items-end justify-center">
+      <div class="w-full max-w-md bg-white dark:bg-[#15241D] rounded-t-[36px] p-6 pb-10 space-y-4 max-h-[85vh] overflow-y-auto border-t border-slate-200 dark:border-[#23382D]">
+        <div class="w-12 h-1.5 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto"></div>
+        <div class="flex items-center justify-between">
+          <h3 id="modal-create-title" class="text-lg font-bold text-slate-900 dark:text-white">Create New Task</h3>
+          <button onclick="app.closeCreateModal()" class="p-1 rounded-full text-slate-400">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Form fields -->
+        <div class="space-y-3" id="modal-create-fields">
+          <!-- Populated by JavaScript according to task / habit / routine type -->
+        </div>
+
+        <button id="modal-submit-btn" onclick="app.submitCreatedItem()" class="w-full py-3.5 rounded-2xl bg-emerald-600 text-white font-bold text-sm shadow-md shadow-emerald-700/20 active:scale-95 transition-transform">
+          Save to Zenith
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Toast Notification -->
+    <div id="zenith-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold shadow-xl transition-all duration-300 opacity-0 pointer-events-none">
+      Message
+    </div>
+
+  </div>
+
+  
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

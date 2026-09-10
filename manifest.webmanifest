@@ -1,0 +1,9 @@
+{
+  "name": "Zenith — Personal Growth & Daily Mastery",
+  "short_name": "Zenith",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF9F6",
+  "theme_color": "#2D6A4F",
+  "icons": []
+}
